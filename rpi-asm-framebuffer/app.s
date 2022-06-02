@@ -10,7 +10,7 @@
 
 
 main:
-	//xd
+	//hola
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
 	//---------------- CODE HERE ------------------------------------
