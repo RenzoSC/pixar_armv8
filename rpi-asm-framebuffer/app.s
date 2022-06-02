@@ -1,7 +1,4 @@
 .include "funciones.s"
-
-.data
-	delay: .dword 0xffffff
 	
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480
@@ -10,38 +7,35 @@
 
 
 main:
-	//hola
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
 	//---------------- CODE HERE ------------------------------------
 	
-	movz x10, 0x8B, lsl 16
-	movk x10, 0xBEFF, lsl 00
-	movz x9, 0x00, lsl 00
-	
-	mov x13, 80		// Coordenada x donde va a empezar a dibujar
-	mov x14, 190		// Coordenada y donde va a empezar a dibujar
-	mov x21, 70
-	mov x22, 10
-	
-dibujar:
-	ldr x15, delay		//en cada loop de dibujo carda en x15 el valor de delay
-
-	//ACA DIBUJA EL FONDO
-	
+	//dibujo fondo---------------------------
+	movz x10, 0x96, lsl 16
+	movk x10, 0xdaff, lsl 00
 	bl fondo
 	
-	//UNA VEZ DIBUJADO EL FONDO DIBUJA EL RECTANGULO	
+	//dibujar un rectangulo----------------------
+	movz x10, 0x81, lsl 16
+	movk x10, 0x3302, lsl 00
+	mov x1, 0xf0	// cordenada x = 240
+	mov x2, 0x64	// coordenada y = 100
+	mov x3, 0x96	// largo del rectangulo L = 150
+	mov x4, 0x4b	// ancho del rectangulo A = 75
+	bl rectangulo
 
-	bl rectangulo	
-				//al salir del bucle crea un delay con time
-time:
-	subs x15, x15, 1
-        b.ne time		//al ser un numero grande el q se guarda en delay
-				//evita el titileo de pantalla 
-				
-	add x13,x13,1		//muevo el rectangulo a la der en pos x para q se mueva y se actualice
-	b dibujar
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
 
 	//---------------------------------------------------------------
 	// Infinite Loop

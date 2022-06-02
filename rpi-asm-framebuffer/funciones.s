@@ -14,6 +14,7 @@ funcion: pintar un pixel
 	usa los registros: x26 x0
 ---------------------------------------------------------------------------------------------------*/
 pintar:
+
 	madd x26, x2, x5, x6 // x26 = (x6 * 640) + x1
         str w10, [x0, x26, lsl #2] // Guardo w10 en x0 + x26*2^2
         
@@ -74,6 +75,7 @@ funcion: pintar fondo
 	usa los registro:	x1 x2
 -------------------------------------------------------------------------------*/
 fondo:
+
 	mov x0, x20
 	mov x2, SCREEN_HEIGH         // Y Size	
 loop1:
