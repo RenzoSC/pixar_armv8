@@ -5,9 +5,74 @@
 .equ SCREEN_HEIGH, 		480
 .equ BITS_PER_PIXEL,  	32
 
+/*---------------------------------------------------------------------------------------------------
+funcion: pintar un pixel
+	parametros:	x10 (color para pintar)
+			x6 (coordenada x)
+			x2 (coordenada y)
+			
+	usa los registros: x26 x0
+---------------------------------------------------------------------------------------------------*/
+pintar:
+	madd x26, x2, x5, x6 // x26 = (x6 * 640) + x1
+        str w10, [x0, x26, lsl #2] // Guardo w10 en x0 + x26*2^2
+        
+        br lr
+	
+	
+	
+	
+	
+
+
+/*---------------------------------------------------------------------------------------------------
+funcion: dibujar un rectangulo
+	parametros:	x1 (coordenada x) x2 (coordenada y)
+			x3 (largo del rectangulo) x4 (ancho del rectangulo)
+			x10 (color del rectangulo)
+---------------------------------------------------------------------------------------------------*/
+rectangulo:
+
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+        stur lr, [sp]
+
+	// X0 contiene la direccion base del framebuffer
+ 	mov x0, x20
+	
+	mov x5, SCREEN_WIDTH
+	
+	add x7, x1, x3	// fin del rectangulo en eje x, x7 = x + Largo
+	add x8, x2, x4	// fin del rectangulo en eje y, x8 = y + Ancho
+	
+recorrecolumna:
+	mov x6, x1	// coordenada x para moverme
+	
+recorrefila:
+
+	bl pintar	//la coordenada donde estoy la pinto
+	
+siga:	add x6, x6, 1
+	cmp x6, x7
+	b.le recorrefila
+	add x2, x2, 1
+	cmp x2, x8
+	b.le recorrecolumna
+
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+        add sp, sp, #8 
+	br lr
 
 
 
+
+
+
+
+/*------------------------------------------------------------------------------
+funcion: pintar fondo
+	parametros:	 x10 (color para el fondo)
+	usa los registro:	x1 x2
+-------------------------------------------------------------------------------*/
 fondo:
 	mov x0, x20
 	mov x2, SCREEN_HEIGH         // Y Size	
@@ -22,28 +87,10 @@ loop0:
 	cbnz x2,loop1	   // if not last row, jump
 	br lr
 
-rectangulo:
-	//UNA VEZ DIBUJADO EL FONDO DIBUJA EL RECTANGULO	
 
-	mov x0, x20		//vuelve a la pos inicial de framebuffer
 	
-	mov x1, SCREEN_WIDTH	//retoma el ancho de la screen para hacer bien el calculo del madd posterior
-	mov x2, x14		//COORDENADA Y DEL RECTANGULO
-	mov x7, x21		//ALTO
 
-siguiente:
-	mov x3, x13		//COORDENADA X DEL RECTANGULO
-	mov x6, x22		//ANCHO
-lamina:	
-	madd x5, x2,x1,x3	// x5 = (x2 * 640) + x3		//calculo de posicion
-	str w9, [x0, x5, lsl 2]	
-	add x3,x3,1		// x3 +=1	//de esta forma pasa al sig pixel
-	sub x6, x6,1		// resta 1 al contador de ancho
-	cbnz x6, lamina		// bucle
 
-	add x2,x2,1		// cuando sale del bucle suma 1 a
-	sub x7,x7,1		// coordenada Y y resta 1 al cont de alt
-	cbnz x7, siguiente	
-	
-	br lr
+
+
 .endif
