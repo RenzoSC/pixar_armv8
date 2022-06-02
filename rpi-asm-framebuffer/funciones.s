@@ -1,5 +1,5 @@
-.ifndef rectangulo
-.equ rectangulo, 0
+.ifndef funciones
+.equ funciones, 0
 
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480

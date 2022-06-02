@@ -1,4 +1,4 @@
-.include "rectangulo.s"
+.include "funciones.s"
 
 .data
 	delay: .dword 0xffffff
