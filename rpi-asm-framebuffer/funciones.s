@@ -70,15 +70,16 @@ circulo:
     stur lr, [sp]
 	
 	mov x0, x20
+	mov x5, SCREEN_WIDTH
 	sub x2, x16, x7 	//coordenada y donde empiezo a evaluar
 	
 	add x9, x7,x7		//diam de y
 	add x8,x4,x4		//diam de x
 	
-	mul x4,x4,x4		// radx²
+	mul x19,x4,x4		// radx²
 	mul x7,x7,x7		// rady²
 	
-	mul x15,x4,x7		// x15= radx²*rady²
+	mul x15,x19,x7		// x15= radx²*rady²
 	
 sig_lamina:	
 	sub x6, x3, x4 	//coordenada x donde empiezo a evaluar
@@ -91,7 +92,7 @@ seguir:
 	mul x17,x17,x17		// x17 = (cord x - centro x)²
 	mul x11,x11,x11		// x11 = (cord y - centro y)²
 	
-	mul x12,x11,x4		// x12 = (x-h)²*radx²
+	mul x12,x11,x19		// x12 = (x-h)²*radx²
 	
 	mul x13,x17,x7		// x13 = (y-k)²*rady²
 	
@@ -99,7 +100,7 @@ seguir:
 			
 	cmp x14, x15
 		
-	b.le pintar		// si la formula me da menor igual a rady²*radx² entonces el punto esta dentro y pinta
+	b.le pinto		// si la formula me da menor igual a rady²*radx² entonces el punto esta dentro y pinta
 
 sigo:				// cuando pinta sigue viene aca, si no pinta tambien asi que suma y resta al contador
 	add x6, x6, 1		//va al sig pix
@@ -107,9 +108,15 @@ sigo:				// cuando pinta sigue viene aca, si no pinta tambien asi que suma y res
 	cbnz x18, seguir		// mientras el diametro de x no se haya acabado entonces sigue en la verificacion
 	
 	add x2,x2,1			//en caso de que se acabe el diam x, aumenta el y
-	sub x9,x9,1		//resta 1 al diam de y y vuelve a hacer la evaluacion
+	sub x9,x9,1		//resta 1 al cont del diam de y y vuelve a hacer la evaluacion
 	cbnz x9, sig_lamina
+	b fin
+pinto:
 	
+	madd x26, x2, x5, x6 // x26 = (x2 * 640) + x6
+    str w10, [x0, x26, lsl #2] // Guardo w10 en x0 + x26*2^2
+	b sigo
+fin:
 	ldur lr, [sp] // Recupero el puntero de retorno del stack
     add sp, sp, #8 
 	br lr

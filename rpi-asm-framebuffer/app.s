@@ -13,15 +13,6 @@ main:
 	movk x10, 0xdaff, lsl 00
 	bl fondo
 	
-	//dibujar un rectangulo----------------------
-	movz x10, 0x81, lsl 16
-	movk x10, 0x3302, lsl 00
-	mov x1, 0xf0	// cordenada x = 240
-	mov x2, 0x64	// coordenada y = 100
-	mov x3, 0x96	// largo del rectangulo L = 150
-	mov x4, 0x4b	// ancho del rectangulo A = 75
-	bl rectangulo
-
 	//dibujar un circulo-----------
 	movz x10, 0x10, lsl 16
 	movk x10, 0x2323, lsl 00
