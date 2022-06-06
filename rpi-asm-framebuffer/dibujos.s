@@ -29,21 +29,17 @@ pintar_globo:
     add sp, sp, #8 
     br lr
 
-globos:
-    sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
-    mov x1, 150
-    mov x23, 200
-    mov x27, 3
-
 /*------------------------------------------------------------------------------
-funcion: pintar_globo   AUN ESTÁ EN BETA HAY QUE ARREGLARLO PARA QUE SE PUEDA LLAMAR DESDE LA FUNC GLOBOS
+funcion: conjunto_globos 
 	usa los registro:	x1 x23 y 27
-    x24 ---> posicion_y del centro que tomará el globo base del conjunto
-    x25 ---> posicion_x del centro que tomará el globo base del conjunto
+    x1 ---> posicion_y del centro que tomará el globo base del conjunto
+    x23 ---> posicion_x del centro que tomará el globo base del conjunto
     x27 ---> cantidad de veces que se expandirá a la derecha ese conjunto   
 -------------------------------------------------------------------------------*/
 conjunto_globos:
+    sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    stur lr, [sp]
+repeat:    
     mov x24, x1
     mov x25, x23    
     ldr w10, globoRojo
@@ -76,9 +72,60 @@ conjunto_globos:
 
     sub x27, x27,1
     add x23,x23, 60
-    cbnz x27, conjunto_globos
+    cbnz x27, repeat
     ldur lr, [sp] // Recupero el puntero de retorno del stack
     add sp, sp, #8 
     br lr
+
+globos:
+    sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    stur lr, [sp]
+
+    mov x1, 65
+    mov x23, 245
+    mov x27, 1
+    bl conjunto_globos
+    mov x1, 65
+    mov x23, 335
+    mov x27, 1
+    bl conjunto_globos
+
+    mov x1, 95
+    mov x23, 215
+    mov x27, 3
+    bl conjunto_globos
+    mov x1, 95
+    mov x23, 245
+    mov x27, 3
+    bl conjunto_globos
+    
+
+    mov x1, 235
+    mov x23, 255
+    mov x27, 1
+    bl conjunto_globos
+    mov x1, 235
+    mov x23, 325
+    mov x27, 1
+    bl conjunto_globos
+
+    mov x1, 205
+    mov x23, 215
+    mov x27, 3
+    bl conjunto_globos
+    mov x1, 205
+    mov x23, 235
+    mov x27, 3
+    bl conjunto_globos
+
+    mov x1, 150
+    mov x23, 200
+    mov x27, 4
+    bl conjunto_globos
+
+    ldur lr, [sp] // Recupero el puntero de retorno del stack
+    add sp, sp, #8 
+    br lr
+
 
 .endif
