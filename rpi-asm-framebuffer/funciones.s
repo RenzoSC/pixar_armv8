@@ -66,9 +66,11 @@ funcion: pintar ovalo/circulo
 circulo:
 	//A LA ELIPSE LO CONTIENE UN RECTANGULO DE ALTURA RADX*2 Y ANCHO RADY*2
 	//SABIENDO ESTO LA ESQUINA DERECHA ESTARA EN LA COORD: x3-x4 , x16-x5
-	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
-	
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+    str lr, [sp,#16]
+	str x3,[sp,#8]  // Store Register X5 in stack
+    str x16,[sp,#0]  // Store Register X7 in stack
+
 	mov x0, x20
 	mov x5, SCREEN_WIDTH
 	sub x2, x16, x7 	//coordenada y donde empiezo a evaluar
@@ -117,8 +119,10 @@ pinto:
     str w10, [x0, x26, lsl #2] // Guardo w10 en x0 + x26*2^2
 	b sigo
 fin:
-	ldur lr, [sp] // Recupero el puntero de retorno del stack
-    add sp, sp, #8 
+	ldr lr, [sp,#16] // Recupero el puntero de retorno del stack
+	ldr x3,[sp,#8]
+	ldr x16,[sp,#0]
+    add sp, sp, #24 
 	br lr
 
 /*------------------------------------------------------------------------------
