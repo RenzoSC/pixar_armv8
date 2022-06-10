@@ -26,7 +26,7 @@ funcion: dibujar un rectangulo
 ---------------------------------------------------------------------------------------------------*/
 rectangulo:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
+    	stur lr, [sp]
 
 	// X0 contiene la direccion base del framebuffer
  	mov x0, x20
@@ -149,5 +149,50 @@ loop0:
 	ldur lr, [sp] // Recupero el puntero de retorno del stack
     add sp, sp, #8 
 	br lr
+	
+/*------------------------------------------------------------------------------
+funcion: pintar trapecio
+	parametros:	 x10 (color)
+			 x11 coordenada x donde empieza
+			 x2 coordenada y donde empieza
+			 x3 largo base (numero impar)
+			 x4 alto (menor o igual a ((base div 2) + 1), si es igual hacemos un triangulo)
+			 x7 cantidad de filas que son iguales	
+-------------------------------------------------------------------------------*/
+trapecio: 
+
+	sub sp, sp, #8 			// Guardo el puntero de retorno en el stack
+        stur lr, [sp]
+        
+subirfilanueva:
+	mov x13, x7	
+        
+subirfila:        
+        mov x6, x11			//en x6 guardo la coordenada x
+        mov x12, x3			//en x12 guardo el largo a pintar por fila
+
+seguirfila:        
+        bl pintar			//pinto la coordenada donde estoy, x6,x2
+        add x6, x6, 1			//voy al pixel de al lado
+        sub x12, x12, 1			//resto uno pq acabo de pintar uno
+        cbnz x12, seguirfila		//veo si me quedo por pintar
+        
+        sub x13, x13, 1			//una fila menos a pintar de la misma forma
+        sub x2, x2, 1			//subimos, entonces y decrece
+        cbnz x13, subirfila	
+        
+        				//si ya no tengo nada que pintar en esa fila y ademas se achica lo que pinto..
+        sub x3, x3, 2			//resto 2, un pixel menos de cada lado
+        add x11, x11, 1			//la coordenada x ahora es la original + 1
+        sub x4, x4, 1			//resto 1 pq ya pinte una fila
+        cbnz x4, subirfilanueva	
+
+	ldur lr, [sp] 			// Recupero el puntero de retorno del stack
+        add sp, sp, #8 
+	br lr
+	
+	
+	
+	
 //	
 .endif
