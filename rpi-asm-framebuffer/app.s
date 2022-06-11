@@ -1,22 +1,42 @@
 
 .include "dibujos.s"
+.data
+delay: .dword 0xffffff
 
 .globl main
 main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
 	//---------------- CODE HERE ------------------------------------
-	//dibujo fondo---------------------------
-	ldr w18, globoAmarillo
+	ldr w10, fondoCelestePastel
+	bl fondo
 	
-	//dibujar globos-----------
-	mov x1, 200  //cord x1
-	mov x2, 150	//cord y1
-	mov x3, 300	//cord x2
-	mov x4, 180	//cord y2
-	bl pintar_linea
+	mov x16, 20
+	mov x24, x16
 	
+dibujar:
+	ldr x27, delay
+
+	ldr w10, fondoCelestePastel
+	bl fondo
+
+	//nubes
+	movz x10, 0xff, lsl 16
+	movk x10, 0xffff, lsl 00
+	mov x3, 80
+	bl conjunto_nubes
 	
+	bl casa
+
+time:
+	subs x27, x27, 1
+        b.ne time
+        
+        add x16, x24, 1
+        add x24, x24, 1
+        
+        b dibujar
+
 InfLoop: 
 	b InfLoop
 
