@@ -1,14 +1,13 @@
 
 .include "dibujos.s"
 .data
-	delay: .dword 0xffffff
+delay: .dword 0xffffff
 
 .globl main
 main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
 	//---------------- CODE HERE ------------------------------------
-	
 	ldr w10, fondoCelestePastel
 	bl fondo
 	
@@ -37,7 +36,6 @@ time:
         add x24, x24, 1
         
         b dibujar
-	
 
 InfLoop: 
 	b InfLoop

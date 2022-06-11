@@ -190,9 +190,97 @@ seguirfila:
 	ldur lr, [sp] 			// Recupero el puntero de retorno del stack
         add sp, sp, #8 
 	br lr
+
+/*------------------------------------------------------------------------------
+funcion: pintar_linea
+	parametros:	 x1 (punto inicial en eje x), x17(punto inicial en eje y), x3(punto final en eje x), x4(punto incial en eje y),x10 color
+-------------------------------------------------------------------------------*/
+pintar_linea:
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    stur lr, [sp]
 	
+	mov x13, SCREEN_WIDTH
+	mov x28,1
+	sub x5,x3,x1 //ax = x2-x1
+	sub x6,x4,x2 //ay = y2-y1
+//GENERAMOS LOS ABSOLUTOS DE AX Y AY Y OBTENEMOS SU SIGNO en x7 y x8 correspondidamente
+	cmp x5, xzr	//PRIMER IF
+	b.eq iguales1
+	cmp x5, xzr
+	b.lt menorestricto1
+	mov x7, 1	//signo1 = 1
+	b sigo1
+iguales1:
+	mov x7, 0
+	b sigo1
+menorestricto1:
+	sub x5, xzr, x5	//ax = -ax
+	sub x7, xzr, x28	//signo1= -1
+sigo1:
+	cmp x6, xzr	//SEGUNDO IF
+	b.eq iguales2
+	cmp x6, xzr
+	b.lt menorestricto2
+	mov x8, 1	//signo2= 1
+	b sigo2
+iguales2:
+	mov x8, 0
+menorestricto2:
+	sub x6, xzr, x6	//ay= -ay
+	sub x8, xzr, x28	//signo2= -1
+
+//ACA TERMINAN LOS ABSOLUTOS Y EL SIGNO
+
+sigo2:
+	cmp x6, x5	//TERCER IF
+	b.le menorestricto3
+	mov x9, 1	//intercambio= 1
+	mov x10, x6	//registro temporal para hacer una asignacion multiple, quiero hacer un swap
+	mov x6, x5	//dx = dy
+	mov x5, x10	//dy = dx
+	b sigo3
 	
-	
-	
+menorestricto3:
+	mov x9, 0
+sigo3:
+	lsl x14,x6,#1	//ay*2
+	lsl x15,x5,#1	//ax*2
+	sub x11, x14, x5 // e = 2*ay -ax
+	mov x12, 1		//para el for, i=1
+
+bucleFor:
+	madd x26, x2, x13, x1 // x26 = (y * 640) + x
+    str w18, [x0, x26, lsl #2] // Guardo w30 en x0 + x26*2^2
+	cmp x11, xzr
+	b.ge mayorigual
+	b sigo4
+mayorigual:
+	cmp x9, 1
+	b.eq equal
+	add x2,x2,x8
+	sub x11,x11,x15
+	b sigo4
+equal:
+	add x1,x1,x7
+	sub x11,x11,x15
+sigo4:
+	cmp x9, 1
+	b.eq equal2
+	add x1,x1,x7
+	add x11,x11,x14
+	b sigo5
+equal2:
+	add x2,x2,x8
+	add x11,x11,x14
+sigo5:
+	add x12,x12,1
+	cmp x12,x5
+	b.le bucleFor
+
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    add sp, sp, #8 
+	br lr
+
 //	
 .endif
+
