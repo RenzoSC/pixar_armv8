@@ -1,8 +1,5 @@
 
 .include "dibujos.s"
-.data
-delay: .dword 0xffffff
-
 .globl main
 main:
 	// X0 contiene la direccion base del framebuffer
@@ -10,33 +7,27 @@ main:
 	//---------------- CODE HERE ------------------------------------
 	ldr w10, fondoCelestePastel
 	bl fondo
+
+	mov x5,90
+	mov x6,170
+	bl pintar_p
+
+	mov x5,200
+	mov x6,170
+	bl pintar_i
 	
-	mov x16, 20
-	mov x24, x16
+	mov x1, 290
+	mov x2, 170
+	bl pintar_x
+
+	mov x1, 400
+	mov x2, 170
+	bl pintar_a
+
+	mov x5, 510
+	mov x6, 170
+	bl pintar_r
 	
-dibujar:
-	ldr x27, delay
-
-	ldr w10, fondoCelestePastel
-	bl fondo
-
-	//nubes
-	movz x10, 0xff, lsl 16
-	movk x10, 0xffff, lsl 00
-	mov x3, 80
-	bl conjunto_nubes
-	
-	bl casa
-
-time:
-	subs x27, x27, 1
-        b.ne time
-        
-        add x16, x24, 1
-        add x24, x24, 1
-        
-        b dibujar
-
 InfLoop: 
 	b InfLoop
 

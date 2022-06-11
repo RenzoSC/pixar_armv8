@@ -8,6 +8,8 @@
 
 
 //COLORES
+//general:
+negro: .word 0x0
 //fondo:
 fondoCelestePastel: .word 0x96ede8
 
