@@ -8,26 +8,25 @@ main:
 	ldr w10, fondoCelestePastel
 	bl fondo
 
-	mov x5,90
-	mov x6,170
-	bl pintar_p
-
+	bl pintar_pxar
 	mov x5,200
 	mov x6,170
 	bl pintar_i
 	
-	mov x1, 290
-	mov x2, 170
-	bl pintar_x
-
-	mov x1, 400
-	mov x2, 170
-	bl pintar_a
-
-	mov x5, 510
-	mov x6, 170
-	bl pintar_r
 	
+	mov x1, 305
+	mov x2, 300
+	mov x3, 340
+	mov x4, 350
+	mov x5, 325
+	mov x6, 390
+	ldr w10, gris_lampara
+	bl palitos_lampara
+	bl base_lamp
+	mov x1, 300
+	mov x2, 300
+	ldr w10, gris_lampara
+	bl circulo_lampara
 InfLoop: 
 	b InfLoop
 

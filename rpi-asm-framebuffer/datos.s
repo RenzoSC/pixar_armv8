@@ -11,7 +11,7 @@
 //general:
 negro: .word 0x0
 //fondo:
-fondoCelestePastel: .word 0x96ede8
+fondoCelestePastel: .word 0xabe1e1
 
 //globos:
 globoNaranja: .word 0xf97331
@@ -22,4 +22,6 @@ globoAzul: .word 0x3854ef
 globoAmarillo: .word 0xefd938
 reflejo: .word 0xe0edde
 
+//lampara:
+gris_lampara: .word 0xb8b8b8
 .endif

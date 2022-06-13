@@ -363,12 +363,20 @@ funcion: pintar_linea
 	str x1, [sp, #16]
 	str x2, [sp, #8]
 	str lr, [sp, #0]
+	
+	sub x1,x1,5
+	mov x3, 20
+	mov x4,1
+	bl rectangulo
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+	
 	mov x7, 10
 repeat_linea:
 	str x1, [sp, #16]
 	str x2, [sp, #8]
 	mov x3,x1
-	add x3,x3,35
+	add x3,x3,45
 	mov x4,x2
 	add x4,x4,70
 	bl pintar_linea
@@ -377,13 +385,33 @@ repeat_linea:
 	ldr x2, [sp, #8]
 	add x1,x1,1
 	cbnz x7, repeat_linea
+
+	add x1,x1,45
+	
+	str x1, [sp, #16]
+	str x2, [sp, #8]
+	sub x1,x1,13
+	mov x3, 20
+	mov x4,1
+	bl rectangulo
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+	str x1, [sp, #16]
+	str x2, [sp, #8]
+	sub x1,x1,57
+	add x2,x2,70
+	mov x3,20
+	mov x4,1
+	bl rectangulo
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+
 	mov x7,5
-	add x1,x1,35
 repeat_linea2:
 	str x1, [sp, #16]
 	str x2, [sp, #8]
 	mov x3,x1
-	sub x3,x3,35
+	sub x3,x3,45
 	mov x4,x2
 	add x4,x4,70
 	bl pintar_linea
@@ -406,6 +434,32 @@ funcion: pintar_linea
 	str x1, [sp, #16]
 	str x2, [sp, #8]
 	str lr, [sp, #0]
+
+	sub x1,x1,11
+	mov x3, 28
+	mov x4,1
+	bl rectangulo
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+	str x1, [sp, #16]
+	str x2, [sp, #8]
+	sub x1,x1,34
+	add x2,x2,70
+	mov x3,16
+	mov x4,1
+	bl rectangulo
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+	str x1, [sp, #16]
+	str x2, [sp, #8]
+	add x1,x1, 16
+	add x2,x2,70
+	mov x3,25
+	mov x4,1
+	bl rectangulo
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+
 	mov x7, 10
 
 repeat_linea_A:
@@ -439,7 +493,7 @@ repeat_linea_A2:
 	mov x7,5
 	sub x1,x1, 10
 	add x2,x2, 30
-repeat_linea_A3:
+repeat_linea_hor:
 	str x1, [sp, #16]
 	str x2, [sp, #8]
 	mov x3,x1
@@ -450,7 +504,7 @@ repeat_linea_A3:
 	ldr x1, [sp, #16]
 	ldr x2, [sp, #8]
 	add x2,x2,1
-	cbnz x7, repeat_linea_A3
+	cbnz x7, repeat_linea_hor
 	ldr lr,[sp,#0]
 	add sp, sp, #24
 	br lr
@@ -538,6 +592,141 @@ repeat_linea_R:
 	cbnz x7, repeat_linea_R
 	ldr lr,[sp,#0]
 	add sp, sp, #24
+	br lr
+
+circulo_lampara:
+	/*------------------------------------------------------------------------------
+funcion: pintar_linea
+	parametros:	 x1 (punto inicial en eje x), x2(punto inicial en eje y) centro del circulo de la lamp
+				x10 (color)
+-------------------------------------------------------------------------------*/
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+    str lr, [sp,#16]
+	str x1,[sp,#8]  // Store Register X1 in stack
+    str x2,[sp,#0]  // Store Register X2 in stack
+	mov x16,x2
+	mov x3, x1
+	mov x4,25
+	mov x7, 25
+	bl circulo
+
+	ldr x1,[sp,#8]
+	ldr x2,[sp,#0]
+	str x1,[sp,#8] 
+    str x2,[sp,#0]  
+	sub x1,x1,25
+	sub x2,x2,25
+	mov x3,25
+	mov x4,50
+	ldr w10, fondoCelestePastel
+	bl rectangulo
+	
+	ldr x1,[sp,#8]
+	ldr x2,[sp,#0]
+	ldr w10, globoAmarillo
+	mov x16,x2
+	mov x3,x1
+	mov x4,0
+	mov x7,25
+	bl circulo
+	ldr lr, [sp,#16] // Recupero el puntero de retorno del stack
+	ldr x1,[sp,#8]
+	ldr x2,[sp,#0]
+    add sp, sp, #24
+
+	br lr
+
+palitos_lampara:
+/*------------------------------------------------------------------------------
+funcion: pintar_linea
+	parametros:	 x1 (punto inicial en eje x), x2(punto inicial en eje y) del primer palito
+				x3 (punto final en eje x), x4(punto final en eje y) del primer palito
+				x5(punto final en eje x), x6(punto final en eje y) del segundo palito
+				x10 (color)
+-------------------------------------------------------------------------------*/
+	sub sp, sp, #56 // Guardo el puntero de retorno en el stack
+	str x1,[sp,#48]  // Store Register X1 in stack
+    str x2,[sp,#40]  // Store Register X2 in stack
+	str x3,[sp,#32]  // Store Register X3 in stack
+    str x4,[sp,#24]  // Store Register X4 in stack
+	str x5,[sp,#16]  // Store Register X5 in stack
+    str x6,[sp,#8]  // Store Register X6 in stack
+	str lr, [sp,#0]
+	mov x7,10
+repeat_linea_lamp:
+	str x1, [sp, #48]
+	str x2, [sp, #40]
+	str x3,[sp,#32]
+	str x4,[sp,#24]
+	bl pintar_linea
+	sub x7,x7,1
+	ldr x1, [sp, #48]
+	ldr x2, [sp, #40]
+	ldr x3,[sp,#32]
+	ldr x4,[sp,#24]
+	add x1,x1,1
+	add x3,x3,1
+	cbnz x7, repeat_linea_lamp
+	mov x7,10
+	ldr x5,[sp,#16]
+	ldr x6,[sp,#8]
+repeat_linea_lamp2:
+	str x3,[sp,#32]
+	str x4,[sp,#24]
+	str x5,[sp,#16]
+	str x6,[sp,#8]
+	mov x1,x3
+	mov x2,x4
+	mov x3,x5
+	mov x4,x6
+	bl pintar_linea
+	sub x7,x7,1
+	ldr x3,[sp,#32]
+	ldr x4,[sp,#24]
+	ldr x5,[sp,#16]
+	ldr x6,[sp,#8]
+	sub x3,x3,1
+	sub x5,x5,1
+	cbnz x7, repeat_linea_lamp2
+
+	
+	ldr x1,[sp,#48]  // Store Register X1 in stack
+    ldr x2,[sp,#40]  // Store Register X2 in stack
+	ldr x3,[sp,#32]  // Store Register X3 in stack
+    ldr x4,[sp,#24]  // Store Register X4 in stack
+	ldr x5,[sp,#16]  // Store Register X5 in stack
+    ldr x6,[sp,#8]  // Store Register X6 in stack
+	ldr lr, [sp,#0]
+	add sp,sp,#56
+	br lr
+base_lamp:
+/*------------------------------------------------------------------------------
+funcion: pintar_linea
+	parametros:	x5(punto final en eje x), x6(punto final en eje y) del segundo palito
+				x10 (color)
+-------------------------------------------------------------------------------*/
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+    str lr, [sp,#16]
+	str x5,[sp,#8]  // Store Register X5 in stack
+    str x6,[sp,#0]  // Store Register X7 in stack
+	add x3,x5,10
+	sub x16,x6,5
+	mov x4,30
+	mov x7,5
+	bl circulo
+	
+	ldr x5,[sp,#8] 
+    ldr x6,[sp,#0]  
+	mov x1,x5
+	sub x1,x1,20
+	mov x2,x6
+	sub x2,x2,5
+	mov x3,60
+	mov x4,8
+	bl rectangulo
+
+	ldur lr, [sp,#16] // Recupero el puntero de retorno del stack
+    add sp, sp, #24 
 	br lr
 //	
 .endif

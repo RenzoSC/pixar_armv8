@@ -517,4 +517,25 @@ conjunto_nubes:
     	add sp, sp, #8 
    	br lr
 
+pintar_pxar:
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    stur lr, [sp]
+	mov x5,90
+	mov x6,170
+	bl pintar_p
+
+	mov x1, 290
+	mov x2, 170
+	bl pintar_x
+
+	mov x1, 400
+	mov x2, 170
+	bl pintar_a
+
+	mov x5, 510
+	mov x6, 170
+	bl pintar_r
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    add sp, sp, #8 
+	br lr
 .endif
