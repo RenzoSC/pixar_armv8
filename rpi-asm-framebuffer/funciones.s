@@ -10,7 +10,7 @@ funcion: pintar un pixel
 			x6 (coordenada x)
 			x2 (coordenada y)
 			
-	usa los registros: x26 x0
+	todos los registros: x2 x5 x6 x26
 ---------------------------------------------------------------------------------------------------*/
 pintar:
 	madd x26, x2, x5, x6 // x26 = (x2 * 640) + x6
@@ -21,8 +21,10 @@ pintar:
 /*---------------------------------------------------------------------------------------------------
 funcion: dibujar un rectangulo
 	parametros:	x1 (coordenada x) x2 (coordenada y)
-			x3 (largo del rectangulo) x4 (ancho del rectangulo)
+			x3 (largo del rectangulo -> ) x4 (ancho/alto del rectangulo )
 			x10 (color del rectangulo)
+			
+	todos los registros: x0 x1 x2 x3 x4 x5 x6 x7 x8
 ---------------------------------------------------------------------------------------------------*/
 rectangulo:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -62,6 +64,8 @@ funcion: pintar ovalo/circulo
 	usa los registro:
 		x16, x3 (COORDY_CENTRO COORDX_CENTRO)
 		x4, x7 (RADX, RADY)
+		
+	todos los registros: x0 x2 x3 x5 x7 x8 x9 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 
 -------------------------------------------------------------------------------*/
 circulo:
 	//A LA ELIPSE LO CONTIENE UN RECTANGULO DE ALTURA RADX*2 Y ANCHO RADY*2
@@ -114,15 +118,13 @@ sigo:				// cuando pinta sigue viene aca, si no pinta tambien asi que suma y res
 	cbnz x9, sig_lamina
 	b fin
 pinto:
-	
-	madd x26, x2, x5, x6 // x26 = (x2 * 640) + x6
-    str w10, [x0, x26, lsl #2] // Guardo w10 en x0 + x26*2^2
+	bl pintar
 	b sigo
 fin:
 	ldr lr, [sp,#16] // Recupero el puntero de retorno del stack
 	ldr x3,[sp,#8]
 	ldr x16,[sp,#0]
-    add sp, sp, #24 
+   	add sp, sp, #24 
 	br lr
 
 /*------------------------------------------------------------------------------
@@ -158,6 +160,8 @@ funcion: pintar trapecio
 			 x3 largo base (numero impar)
 			 x4 alto (menor o igual a ((base div 2) + 1), si es igual hacemos un triangulo)
 			 x7 cantidad de filas que son iguales	
+			 
+	todos los registros: x2 x3 x4 x6 x11 x12 x13
 -------------------------------------------------------------------------------*/
 trapecio: 
 
@@ -193,7 +197,13 @@ seguirfila:
 
 /*------------------------------------------------------------------------------
 funcion: pintar_linea
-	parametros:	 x1 (punto inicial en eje x), x17(punto inicial en eje y), x3(punto final en eje x), x4(punto incial en eje y),x10 color
+	parametros:	 x1 (punto inicial en eje x) 
+			 x2(punto inicial en eje y) 
+			 x3(punto final en eje x) 
+			 x4(punto final en eje y)
+			 x10 color
+			 
+	todos los registros: x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x18 x26 x28 
 -------------------------------------------------------------------------------*/
 pintar_linea:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -250,7 +260,7 @@ sigo3:
 
 bucleFor:
 	madd x26, x2, x13, x1 // x26 = (y * 640) + x
-    str w18, [x0, x26, lsl #2] // Guardo w30 en x0 + x26*2^2
+    	str w18, [x0, x26, lsl #2] // Guardo w30 en x0 + x26*2^2
 	cmp x11, xzr
 	b.ge mayorigual
 	b sigo4
@@ -278,7 +288,7 @@ sigo5:
 	b.le bucleFor
 
 	ldur lr, [sp] // Recupero el puntero de retorno del stack
-    add sp, sp, #8 
+    	add sp, sp, #8 
 	br lr
 
 //	

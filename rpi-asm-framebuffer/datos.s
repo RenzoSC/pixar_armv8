@@ -7,6 +7,9 @@
 .equ BITS_PER_PIXEL,  	32
 
 
+.data
+	delay: .dword 0xffffff
+
 //COLORES
 //fondo:
 fondoCelestePastel: .word 0x96ede8
@@ -19,5 +22,6 @@ globoRosa: .word 0xef38b2
 globoAzul: .word 0x3854ef
 globoAmarillo: .word 0xefd938
 reflejo: .word 0xe0edde
+
 
 .endif

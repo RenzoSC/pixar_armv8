@@ -1,0 +1,80 @@
+
+Configuración de la Memoria
+
+Nombre           Origen             Longitud           Atributos
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Guión del enlazador y mapa de memoria
+
+LOAD app.o
+LOAD datos.o
+LOAD dibujos.o
+LOAD funciones.o
+LOAD start.o
+                0x0000000000080000                . = 0x80000
+
+.text           0x0000000000080000    0x900c8
+ *(.text.boot)
+ .text.boot     0x0000000000080000    0x100c8 start.o
+                0x0000000000080000                _start
+ *(.text*)
+ .text          0x00000000000900c8        0x0 app.o
+ .text          0x00000000000900c8        0x0 datos.o
+ .text          0x00000000000900c8        0x0 dibujos.o
+ .text          0x00000000000900c8        0x0 funciones.o
+ .text          0x00000000000900c8    0x80000 start.o
+
+.iplt           0x00000000001100c8        0x0
+ .iplt          0x00000000001100c8        0x0 start.o
+
+.rela.dyn       0x00000000001100c8        0x0
+ .rela.iplt     0x00000000001100c8        0x0 start.o
+ .rela.text.boot
+                0x00000000001100c8        0x0 start.o
+
+.data           0x00000000001100c8     0x14bc
+ .data          0x00000000001100c8      0x938 app.o
+                0x000000000011099c                main
+ .data          0x0000000000110a00       0x28 datos.o
+ .data          0x0000000000110a28      0x8d4 dibujos.o
+ .data          0x00000000001112fc      0x288 funciones.o
+ .data          0x0000000000111584        0x0 start.o
+
+.igot.plt       0x0000000000111588        0x0
+ .igot.plt      0x0000000000111588        0x0 start.o
+
+.bss            0x0000000000111584        0x0
+ *(.bss*)
+ .bss           0x0000000000111584        0x0 app.o
+ .bss           0x0000000000111584        0x0 datos.o
+ .bss           0x0000000000111584        0x0 dibujos.o
+ .bss           0x0000000000111584        0x0 funciones.o
+ .bss           0x0000000000111584        0x0 start.o
+
+.bss            0x0000000000111584        0xc
+                0x0000000000111590                . = ALIGN (0x10)
+ *fill*         0x0000000000111584        0xc 
+                0x0000000000111590                __bss_start = .
+ *(.bss .bss.*)
+ *(COMMON)
+                0x0000000000111590                __bss_end = .
+                0x0000000000111590                _end = .
+                0x0000000000000000                __bss_size = ((__bss_end - __bss_start) >> 0x3)
+OUTPUT(kernel8.elf elf64-littleaarch64)
+LOAD linker stubs
+
+.debug_line     0x0000000000000000       0x53
+ .debug_line    0x0000000000000000       0x53 start.o
+
+.debug_info     0x0000000000000000       0x2e
+ .debug_info    0x0000000000000000       0x2e start.o
+
+.debug_abbrev   0x0000000000000000       0x14
+ .debug_abbrev  0x0000000000000000       0x14 start.o
+
+.debug_aranges  0x0000000000000000       0x30
+ .debug_aranges
+                0x0000000000000000       0x30 start.o
+
+.debug_str      0x0000000000000000       0x52
+ .debug_str     0x0000000000000000       0x52 start.o
