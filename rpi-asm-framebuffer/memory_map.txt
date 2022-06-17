@@ -32,33 +32,33 @@ LOAD start.o
  .rela.text.boot
                 0x00000000001100c8        0x0 start.o
 
-.data           0x00000000001100c8     0x2b60
- .data          0x00000000001100c8     0x10b8 app.o
-                0x0000000000111150                main
- .data          0x0000000000111180       0x54 datos.o
- .data          0x00000000001111d4     0x1088 dibujos.o
- .data          0x000000000011225c      0x9cc funciones.o
- .data          0x0000000000112c28        0x0 start.o
+.data           0x00000000001100c8     0x2a2c
+ .data          0x00000000001100c8     0x1054 app.o
+                0x00000000001110e8                main
+ .data          0x000000000011111c       0x54 datos.o
+ .data          0x0000000000111170     0x1020 dibujos.o
+ .data          0x0000000000112190      0x964 funciones.o
+ .data          0x0000000000112af4        0x0 start.o
 
-.igot.plt       0x0000000000112c28        0x0
- .igot.plt      0x0000000000112c28        0x0 start.o
+.igot.plt       0x0000000000112af8        0x0
+ .igot.plt      0x0000000000112af8        0x0 start.o
 
-.bss            0x0000000000112c28        0x0
+.bss            0x0000000000112af4        0x0
  *(.bss*)
- .bss           0x0000000000112c28        0x0 app.o
- .bss           0x0000000000112c28        0x0 datos.o
- .bss           0x0000000000112c28        0x0 dibujos.o
- .bss           0x0000000000112c28        0x0 funciones.o
- .bss           0x0000000000112c28        0x0 start.o
+ .bss           0x0000000000112af4        0x0 app.o
+ .bss           0x0000000000112af4        0x0 datos.o
+ .bss           0x0000000000112af4        0x0 dibujos.o
+ .bss           0x0000000000112af4        0x0 funciones.o
+ .bss           0x0000000000112af4        0x0 start.o
 
-.bss            0x0000000000112c28        0x8
-                0x0000000000112c30                . = ALIGN (0x10)
- *fill*         0x0000000000112c28        0x8 
-                0x0000000000112c30                __bss_start = .
+.bss            0x0000000000112af4        0xc
+                0x0000000000112b00                . = ALIGN (0x10)
+ *fill*         0x0000000000112af4        0xc 
+                0x0000000000112b00                __bss_start = .
  *(.bss .bss.*)
  *(COMMON)
-                0x0000000000112c30                __bss_end = .
-                0x0000000000112c30                _end = .
+                0x0000000000112b00                __bss_end = .
+                0x0000000000112b00                _end = .
                 0x0000000000000000                __bss_size = ((__bss_end - __bss_start) >> 0x3)
 OUTPUT(kernel8.elf elf64-littleaarch64)
 LOAD linker stubs
