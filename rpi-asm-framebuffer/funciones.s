@@ -134,8 +134,10 @@ funcion: pintar fondo
 	usa los registro:	x1 x2
 -------------------------------------------------------------------------------*/
 fondo:
-	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+    str x1, [sp, #16]
+	str x2, [sp, #8]
+	str lr, [sp, #0]
 
 	mov x0, x20
 	mov x2, SCREEN_HEIGH         // Y Size	
@@ -149,8 +151,10 @@ loop0:
 	sub x2,x2,1	   // Decrement Y counter
 	cbnz x2,loop1	   // if not last row, jump
 	
-	ldur lr, [sp] // Recupero el puntero de retorno del stack
-    add sp, sp, #8 
+	ldr x1, [sp, #16]
+	ldr x2, [sp, #8]
+	ldr lr, [sp, #0]
+    add sp, sp, #24
 	br lr
 	
 /*------------------------------------------------------------------------------
@@ -303,68 +307,42 @@ funcion: pintar_linea
 				x4 (altura)
 				x10 (color)
 -------------------------------------------------------------------------------*/
-	sub sp, sp, #32 // Guardo el puntero de retorno en el stack
+	sub sp, sp, #40 // Guardo el puntero de retorno en el stack
+	str x4,[sp,#32]  // Store Register X5 in stack
 	str x5,[sp,#16]  // Store Register X5 in stack
     str x6,[sp,#8]  // Store Register X6 in stack
 	str lr, [sp,#0]
 	mov x1, x5
 	mov x2, x6
 	mov x3, 10
-	mov x4, 70
+
 	bl rectangulo
 	ldr x5, [sp,#16] // Recupero registros del stack
 	ldr x6,[sp,#8]
+	ldr x4,[sp,#32]
 	//temporales
-	sub x7,	x5,10   //40
-	add x8, x5, 20  //70
-	add x9, x6,1    //171
+	sub x7,	x5,10
+	mov x8, 30 
+	add x9, x6,x4 
 	str x9, [sp, #24]
 	str x7, [sp, #16]
 	str x8, [sp, #8]
 	//
 	mov x1,	x7 //40
 	mov x2, x6 //170
-	mov x3, x8 //70
-	mov x4, x6 //170
-	bl pintar_linea
+	mov x3, x8
+	mov x4, 1
+	bl rectangulo
 	ldr x9, [sp, #24]
 	ldr x7, [sp, #16]
 	ldr x8, [sp, #8]
-	str x9, [sp, #24]
-	str x7, [sp, #16]
-	str x8, [sp, #8]
 	mov x1, x7
-	mov x2, x9		
-	mov x3, x8
-	mov x4, x9
-	bl pintar_linea
-	ldr x9, [sp, #24]
-	ldr x7, [sp, #16]
-	ldr x8, [sp, #8]
-	add x9,x9,69
-	str x9, [sp, #24]
-	str x7, [sp, #16]
-	str x8, [sp, #8]
-	mov x1, x7
-	mov x2, x9
-	mov x3, x8
-	mov x4, x9
-	bl pintar_linea
-	ldr x9, [sp, #24]
-	ldr x7, [sp, #16]
-	ldr x8, [sp, #8]
-	str x9, [sp, #24]
-	str x7, [sp, #16]
-	str x8, [sp, #8]
-	sub x9,x9,1
-	mov x1, x7
-	mov x2, x9
-	mov x3, x8
-	mov x4, x9
-	bl pintar_linea
-
+	mov x2,x9
+	mov x3,x8
+	mov x4,1
+	bl rectangulo
 	ldur lr, [sp,#0] // Recupero el puntero de retorno del stack
-    add sp, sp, #32
+    add sp, sp, #40
 	br lr
 
 pintar_x:

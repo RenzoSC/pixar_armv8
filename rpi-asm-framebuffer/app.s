@@ -11,6 +11,7 @@ main:
 	bl pintar_pxar
 	mov x5,200
 	mov x6,170
+	mov x4,70
 	bl pintar_i
 	
 	mov x1, 190
