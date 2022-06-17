@@ -7,6 +7,9 @@
 .equ BITS_PER_PIXEL,  	32
 
 
+.data
+	delay: .dword 0xffffff
+
 //COLORES
 //general:
 negro: .word 0x0
@@ -24,4 +27,19 @@ reflejo: .word 0xe0edde
 
 //lampara:
 gris_lampara: .word 0xb8b8b8
+=======
+fondoComienzo: .word 0xeeffff
+restaComienzo: .word 0x020100
+
+fondoCeleste: .word 0x8888ff
+restaCeleste: .word 0x010100
+
+fondoAzul: .word 0x4466ff
+restaAzul: .word 0x010101
+
+fondoAzulOscuro: .word 0x022255
+restaAzulOscuro: .word 0x000102
+
+fondoUltimo: .word 0x010100
+
 .endif

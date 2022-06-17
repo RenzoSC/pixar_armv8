@@ -10,7 +10,7 @@ funcion: pintar un pixel
 			x6 (coordenada x)
 			x2 (coordenada y)
 			
-	usa los registros: x26 x0
+	todos los registros: x2 x5 x6 x26
 ---------------------------------------------------------------------------------------------------*/
 pintar:
 	madd x26, x2, x5, x6 // x26 = (x2 * 640) + x6
@@ -21,8 +21,11 @@ pintar:
 /*---------------------------------------------------------------------------------------------------
 funcion: dibujar un rectangulo
 	parametros:	x1 (coordenada x) x2 (coordenada y)
-			x3 (ancho del rectangulo) x4 (alto del rectangulo)
+
+			x3 (largo del rectangulo -> ) x4 (ancho/alto del rectangulo )
 			x10 (color del rectangulo)
+			
+	todos los registros: x0 x1 x2 x3 x4 x5 x6 x7 x8
 ---------------------------------------------------------------------------------------------------*/
 rectangulo:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -62,6 +65,8 @@ funcion: pintar ovalo/circulo
 	usa los registro:
 		x16, x3 (COORDY_CENTRO COORDX_CENTRO)
 		x4, x7 (RADX, RADY)
+		
+	todos los registros: x0 x2 x3 x5 x7 x8 x9 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 
 -------------------------------------------------------------------------------*/
 circulo:
 	//A LA ELIPSE LO CONTIENE UN RECTANGULO DE ALTURA RADX*2 Y ANCHO RADY*2
@@ -114,15 +119,13 @@ sigo:				// cuando pinta sigue viene aca, si no pinta tambien asi que suma y res
 	cbnz x9, sig_lamina
 	b fin
 pinto:
-	
-	madd x26, x2, x5, x6 // x26 = (x2 * 640) + x6
-    str w10, [x0, x26, lsl #2] // Guardo w10 en x0 + x26*2^2
+	bl pintar
 	b sigo
 fin:
 	ldr lr, [sp,#16] // Recupero el puntero de retorno del stack
 	ldr x3,[sp,#8]
 	ldr x16,[sp,#0]
-    add sp, sp, #24 
+   	add sp, sp, #24 
 	br lr
 
 /*------------------------------------------------------------------------------
@@ -158,6 +161,8 @@ funcion: pintar trapecio
 			 x3 largo base (numero impar)
 			 x4 alto (menor o igual a ((base div 2) + 1), si es igual hacemos un triangulo)
 			 x7 cantidad de filas que son iguales	
+			 
+	todos los registros: x2 x3 x4 x6 x11 x12 x13
 -------------------------------------------------------------------------------*/
 trapecio: 
 
@@ -193,11 +198,18 @@ seguirfila:
 
 /*------------------------------------------------------------------------------
 funcion: pintar_linea
-	parametros:	 x1 (punto inicial en eje x), x2(punto inicial en eje y), x3(punto final en eje x), x4(punto incial en eje y),x18 color
+
+	parametros:	 x1 (punto inicial en eje x) 
+			 x2(punto inicial en eje y) 
+			 x3(punto final en eje x) 
+			 x4(punto final en eje y)
+			 x10 color
+			 
+	todos los registros: x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x18 x26 x28 
 -------------------------------------------------------------------------------*/
 pintar_linea:
 	sub sp, sp, #16 // Guardo el puntero de retorno en el stack
-    str lr, [sp,#8]
+  str lr, [sp,#8]
 	str x7, [sp,#0]
 	
 	mov x13, SCREEN_WIDTH
@@ -251,7 +263,9 @@ sigo3:
 
 bucleFor:
 	madd x26, x2, x13, x1 // x26 = (y * 640) + x
-    str w10, [x0, x26, lsl #2] // Guardo w30 en x0 + x26*2^2
+
+  str w10, [x0, x26, lsl #2] // Guardo w30 en x0 + x26*2^2
+
 	cmp x11, xzr
 	b.ge mayorigual
 	b sigo4
@@ -277,9 +291,8 @@ sigo5:
 	add x12,x12,1
 	cmp x12,x5
 	b.le bucleFor
-
 	ldr lr, [sp,#8] // Recupero el puntero de retorno del stack
-    ldr x7, [sp,#0]
+  ldr x7, [sp,#0]
 	add sp, sp, #16 
 	br lr
 
@@ -765,6 +778,107 @@ funcion: pintar_lampara
 	ldr x7,[sp,#0]
 	add sp, sp, #64
 	br lr
-//	
+
+/*------------------------------------------------------------------------------
+funcion: actualizar framebuffer, copiar lo que hay en el framebuffer sencundario en el principal
+-------------------------------------------------------------------------------*/
+actualizar_framebuffer:
+
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+    	
+    	
+    	//paso lo que dibuje en el otro frame al original
+    	//pongo en x20 la base del framebuffer original
+	sub x20, x20, 1228800
+	sub x20, x20, 1228800
+	sub x20, x20, 1228800
+	mov x4, 0
+	
+sig_pixel:
+	cmp x4, 1228800
+	b.eq final
+	ldur x11, [x0]			//copia el secundario en el primario
+	stur x11, [x20]
+	
+	add x20, x20, 4
+	add x0, x0, 4
+	add x4, x4, 4
+	
+	b sig_pixel
+final:
+
+	sub x20, x20, 1228800	//vuelvo el x20 a la base del framebuffer original
+	mov x0, x20
+
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    	add sp, sp, #8 
+	br lr
+	
+	
+/*------------------------------------------------------------------------------
+funcion: actulizo el x0 y el x20 con la direccion del framebuffer secundario
+-------------------------------------------------------------------------------*/	
+direccion_secundaria:
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+    	
+	add x0, x0, 1228800		//el framebuffer secundario esta mas abajo que el orginal 
+	add x0, x0, 1228800
+	add x0, x0, 1228800
+	add x20, xzr, x0
+	
+	
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    	add sp, sp, #8 
+	br lr
+	
+	
+/*------------------------------------------------------------------------------
+funcion: actulizo el color del fondo a uno mas oscuro
+-------------------------------------------------------------------------------*/
+actualizar_fondo:
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+		ldr w11, fondoCeleste
+        cmp x10, x11
+        b.le two
+        ldr w12, restaComienzo
+        sub x10, x10 , x12
+        b end2
+     
+        
+        //83A1FC
+two:	
+	ldr w11, fondoAzul
+	cmp x10, x11
+	b.le three
+	ldr w12, restaCeleste
+        sub x10, x10 , x12
+        b end2
+        
+three:	
+	ldr w11, fondoAzulOscuro
+	cmp x10, x11
+	b.le end
+	ldr w12, restaAzul
+        sub x10, x10 , x12
+        b end2
+end:	
+	ldr w11, fondoUltimo
+	cmp x10, x11
+	b.le end2
+	ldr w12, restaAzulOscuro
+	sub x10, x10 , x12
+	b end2
+end2:
+
+    ldur lr, [sp] // Recupero el puntero de retorno del stack
+    add sp, sp, #8 
+	br lr
+
 .endif
 

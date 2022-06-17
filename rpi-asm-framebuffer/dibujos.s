@@ -10,6 +10,8 @@ funcion: pintar_globo
     x24 ---> posicion_y del centro que tomará el globo
     x25 ---> posicion_x del centro que tomará el globo
     w10 ---> color del globo   
+    
+    todos los registros: x3 x4 x7 x16 x10 x24 x25
 -------------------------------------------------------------------------------*/
 pintar_globo:
     sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -35,6 +37,8 @@ funcion: conjunto_globos
     x1 ---> posicion_y del centro que tomará el globo base del conjunto
     x23 ---> posicion_x del centro que tomará el globo base del conjunto
     x27 ---> cantidad de veces que se expandirá a la derecha ese conjunto   
+    
+    todos los registros: x1 x10 x16 x23 x24 x25 x27
 -------------------------------------------------------------------------------*/
 conjunto_globos:
     sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -122,6 +126,56 @@ globos:
     mov x23, 200
     mov x27, 4
     bl conjunto_globos
+    
+    //dibujo los hilos
+    
+    movz x10, 0x00, lsl 16
+    movk x10, 0x0000, lsl 00
+    
+    mov x1, 250
+    mov x2, 285
+    mov x3, 305
+    mov x4, 324
+    bl pintar_linea
+    
+    mov x1, 275
+    mov x2, 285
+    mov x3, 305
+    mov x4, 324
+    bl pintar_linea
+    
+    mov x1, 295
+    mov x2, 285
+    mov x3, 305
+    mov x4, 324
+    bl pintar_linea
+    
+    mov x1, 320
+    mov x2, 285
+    mov x3, 305
+    mov x4, 324
+    bl pintar_linea
+    
+    mov x1, 345
+    mov x2, 285
+    mov x3, 305
+    mov x4, 324
+    bl pintar_linea
+    
+    mov x1, 365
+    mov x2, 285
+    mov x3, 305
+    mov x4, 324
+    bl pintar_linea
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     ldur lr, [sp] // Recupero el puntero de retorno del stack
     add sp, sp, #8 
@@ -129,7 +183,7 @@ globos:
     
 /*------------------------------------------------------------------------------
 funcion: dibuja una casa 
- 
+ todos los registros: x1 x2 x3 x4 x10 x7 x11
 -------------------------------------------------------------------------------*/
 
 casa:
@@ -431,6 +485,7 @@ funcion: dibuja una nube
 				x3 coordenada x
 				x16 coordenada y	coordenadas del primer circulo izquierdo
  
+ 	todos los registros: x1 x2 x3 x4 x7 x16 x22 x23
 -------------------------------------------------------------------------------*/
 nube:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -477,10 +532,12 @@ nube:
 /*---------------------------------------------------------------------------------------------------
  conjunto de nubes		parametros x3 coordenada x
  					   x16 coordenada y
+ 					   
+ 	todos los registros: x3 x10 x16
 ---------------------------------------------------------------------------------------------------*/
 conjunto_nubes:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
+    	stur lr, [sp]
     	
     	movz x10, 0xff, lsl 16
 	movk x10, 0xffff, lsl 00
@@ -510,12 +567,13 @@ conjunto_nubes:
     	add x16, x16, 60
     	bl nube
     	
-    	
+   
     	    	
     	
     	ldur lr, [sp] // Recupero el puntero de retorno del stack
     	add sp, sp, #8 
    	br lr
+
 
 pintar_pxar:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
@@ -538,4 +596,26 @@ pintar_pxar:
 	ldur lr, [sp] // Recupero el puntero de retorno del stack
     add sp, sp, #8 
 	br lr
+
+/*------------------------------------------------------------------------------
+funcion: dibuja el pasto
+ todos los registros: 
+-------------------------------------------------------------------------------*/  
+pasto:  	
+
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+    	mov x9, x2		//guardo en x9 la coordenada y
+    	
+	movz x10, 0x79, lsl 16
+	movk x10, 0xac5f, lsl 00
+	mov x3, 640
+	mov x4, 20
+	bl rectangulo
+
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    	add sp, sp, #8 
+   	br lr
+
 .endif
