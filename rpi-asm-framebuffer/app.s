@@ -14,19 +14,14 @@ main:
 	bl pintar_i
 	
 	
-	mov x1, 305
+	mov x1, 300
 	mov x2, 300
 	mov x3, 340
 	mov x4, 350
 	mov x5, 325
 	mov x6, 390
-	ldr w10, gris_lampara
-	bl palitos_lampara
-	bl base_lamp
-	mov x1, 300
-	mov x2, 300
-	ldr w10, gris_lampara
-	bl circulo_lampara
+	mov x7, 5
+	bl pintar_lampara
 InfLoop: 
 	b InfLoop
 

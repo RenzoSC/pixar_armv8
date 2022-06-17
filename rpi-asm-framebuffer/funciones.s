@@ -598,9 +598,11 @@ circulo_lampara:
 	/*------------------------------------------------------------------------------
 funcion: pintar_linea
 	parametros:	 x1 (punto inicial en eje x), x2(punto inicial en eje y) centro del circulo de la lamp
+				 x7 (ancho amarillo)
 				x10 (color)
 -------------------------------------------------------------------------------*/
-	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+	sub sp, sp, #32 // Guardo el puntero de retorno en el stack
+	str x7, [sp,#24]
     str lr, [sp,#16]
 	str x1,[sp,#8]  // Store Register X1 in stack
     str x2,[sp,#0]  // Store Register X2 in stack
@@ -624,15 +626,16 @@ funcion: pintar_linea
 	ldr x1,[sp,#8]
 	ldr x2,[sp,#0]
 	ldr w10, globoAmarillo
+	ldr x7,[sp,#24]
 	mov x16,x2
 	mov x3,x1
-	mov x4,0
+	mov x4,x7
 	mov x7,25
 	bl circulo
 	ldr lr, [sp,#16] // Recupero el puntero de retorno del stack
 	ldr x1,[sp,#8]
 	ldr x2,[sp,#0]
-    add sp, sp, #24
+    add sp, sp, #32
 
 	br lr
 
@@ -727,6 +730,40 @@ funcion: pintar_linea
 
 	ldur lr, [sp,#16] // Recupero el puntero de retorno del stack
     add sp, sp, #24 
+	br lr
+
+pintar_lampara:
+/*------------------------------------------------------------------------------
+funcion: pintar_lampara
+	parametros:	x1,x2,x3,x4,x5,x6,x7
+-------------------------------------------------------------------------------*/
+	sub sp,sp,#64
+	str lr,[sp,#56]
+	str x1,[sp,#48]
+	str x2,[sp,#40]
+	str x3,[sp,#32]
+	str x4,[sp,#24]
+	str x5,[sp,#16]
+	str x6,[sp,#8]
+	str x7,[sp,#0]
+	add x1,x1,5
+	ldr w10, gris_lampara
+	bl palitos_lampara
+	bl base_lamp
+	ldr x1,[sp,#48]
+	ldr x2,[sp,#40]
+	ldr x7,[sp,#0]
+	ldr w10, gris_lampara
+	bl circulo_lampara
+	ldr lr,[sp,#56]
+	ldr x1,[sp,#48]
+	ldr x2,[sp,#40]
+	ldr x3,[sp,#32]
+	ldr x4,[sp,#24]
+	ldr x5,[sp,#16]
+	ldr x6,[sp,#8]
+	ldr x7,[sp,#0]
+	add sp, sp, #64
 	br lr
 //	
 .endif
