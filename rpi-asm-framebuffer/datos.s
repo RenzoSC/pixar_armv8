@@ -41,4 +41,5 @@ restaAzulOscuro: .word 0x000102
 
 fondoUltimo: .word 0x010100
 
+fondoPixar: .word 0xbbdefe
 .endif
