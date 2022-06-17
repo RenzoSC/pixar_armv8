@@ -300,6 +300,7 @@ pintar_i:
 	/*------------------------------------------------------------------------------
 funcion: pintar_linea
 	parametros:	 x5 (punto inicial en eje x), x6(punto inicial en eje y) esquina sup izq de la letra i 
+				x4 (altura)
 				x10 (color)
 -------------------------------------------------------------------------------*/
 	sub sp, sp, #32 // Guardo el puntero de retorno en el stack
@@ -748,12 +749,20 @@ funcion: pintar_linea
 pintar_lampara:
 /*------------------------------------------------------------------------------
 funcion: pintar_lampara
-	parametros:	x1,x2,x3,x4,x5,x6,x7
+	parametros:	x1,x2
 -------------------------------------------------------------------------------*/
 	sub sp,sp,#64
 	str lr,[sp,#56]
 	str x1,[sp,#48]
 	str x2,[sp,#40]
+	mov x3,x1
+	add x3,x3,40
+	mov x4,x2
+	add x4,x2,50
+	mov x5,x1
+	add x5,x1,25
+	mov x6,x2
+	add x6,x6,90
 	str x3,[sp,#32]
 	str x4,[sp,#24]
 	str x5,[sp,#16]
@@ -771,10 +780,7 @@ funcion: pintar_lampara
 	ldr lr,[sp,#56]
 	ldr x1,[sp,#48]
 	ldr x2,[sp,#40]
-	ldr x3,[sp,#32]
-	ldr x4,[sp,#24]
-	ldr x5,[sp,#16]
-	ldr x6,[sp,#8]
+
 	ldr x7,[sp,#0]
 	add sp, sp, #64
 	br lr
