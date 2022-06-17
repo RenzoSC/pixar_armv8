@@ -27,7 +27,6 @@ reflejo: .word 0xe0edde
 
 //lampara:
 gris_lampara: .word 0xb8b8b8
-=======
 fondoComienzo: .word 0xeeffff
 restaComienzo: .word 0x020100
 
