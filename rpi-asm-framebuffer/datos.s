@@ -23,5 +23,19 @@ globoAzul: .word 0x3854ef
 globoAmarillo: .word 0xefd938
 reflejo: .word 0xe0edde
 
+fondoComienzo: .word 0xeeffff
+restaComienzo: .word 0x020100
+
+fondoCeleste: .word 0x8888ff
+restaCeleste: .word 0x010100
+
+fondoAzul: .word 0x4466ff
+restaAzul: .word 0x010101
+
+fondoAzulOscuro: .word 0x022255
+restaAzulOscuro: .word 0x000102
+
+fondoUltimo: .word 0x010100
+
 
 .endif

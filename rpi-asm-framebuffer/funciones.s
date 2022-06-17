@@ -207,7 +207,7 @@ funcion: pintar_linea
 -------------------------------------------------------------------------------*/
 pintar_linea:
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
+    	stur lr, [sp]
 	
 	mov x13, SCREEN_WIDTH
 	mov x28,1
@@ -291,6 +291,108 @@ sigo5:
     	add sp, sp, #8 
 	br lr
 
-//	
+
+/*------------------------------------------------------------------------------
+funcion: actualizar framebuffer, copiar lo que hay en el framebuffer sencundario en el principal
+-------------------------------------------------------------------------------*/
+actualizar_framebuffer:
+
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+    	
+    	
+    	//paso lo que dibuje en el otro frame al original
+    	//pongo en x20 la base del framebuffer original
+	sub x20, x20, 1228800
+	sub x20, x20, 1228800
+	sub x20, x20, 1228800
+	mov x4, 0
+	
+sig_pixel:
+	cmp x4, 1228800
+	b.eq final
+	ldur x11, [x0]			//copia el secundario en el primario
+	stur x11, [x20]
+	
+	add x20, x20, 4
+	add x0, x0, 4
+	add x4, x4, 4
+	
+	b sig_pixel
+final:
+
+	sub x20, x20, 1228800	//vuelvo el x20 a la base del framebuffer original
+	mov x0, x20
+
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    	add sp, sp, #8 
+	br lr
+	
+	
+/*------------------------------------------------------------------------------
+funcion: actulizo el x0 y el x20 con la direccion del framebuffer secundario
+-------------------------------------------------------------------------------*/	
+direccion_secundaria:
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+    	
+	add x0, x0, 1228800		//el framebuffer secundario esta mas abajo que el orginal 
+	add x0, x0, 1228800
+	add x0, x0, 1228800
+	add x20, xzr, x0
+	
+	
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    	add sp, sp, #8 
+	br lr
+	
+	
+/*------------------------------------------------------------------------------
+funcion: actulizo el color del fondo a uno mas oscuro
+-------------------------------------------------------------------------------*/
+actualizar_fondo:
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+		ldr w11, fondoCeleste
+        cmp x10, x11
+        b.le two
+        ldr w12, restaComienzo
+        sub x10, x10 , x12
+        b end2
+     
+        
+        //83A1FC
+two:	
+	ldr w11, fondoAzul
+	cmp x10, x11
+	b.le three
+	ldr w12, restaCeleste
+        sub x10, x10 , x12
+        b end2
+        
+three:	
+	ldr w11, fondoAzulOscuro
+	cmp x10, x11
+	b.le end
+	ldr w12, restaAzul
+        sub x10, x10 , x12
+        b end2
+end:	
+	ldr w11, fondoUltimo
+	cmp x10, x11
+	b.le end2
+	ldr w12, restaAzulOscuro
+	sub x10, x10 , x12
+	b end2
+end2:
+
+    ldur lr, [sp] // Recupero el puntero de retorno del stack
+    add sp, sp, #8 
+	br lr
+
+	
 .endif
 

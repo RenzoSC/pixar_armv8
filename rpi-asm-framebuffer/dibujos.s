@@ -574,4 +574,28 @@ conjunto_nubes:
     	add sp, sp, #8 
    	br lr
 
+/*------------------------------------------------------------------------------
+funcion: dibuja el pasto
+ todos los registros: 
+-------------------------------------------------------------------------------*/  
+pasto:  	
+
+	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
+    	stur lr, [sp]
+    	
+    	mov x9, x2		//guardo en x9 la coordenada y
+    	
+	movz x10, 0x79, lsl 16
+	movk x10, 0xac5f, lsl 00
+	mov x3, 640
+	mov x4, 20
+	bl rectangulo
+
+	ldur lr, [sp] // Recupero el puntero de retorno del stack
+    	add sp, sp, #8 
+   	br lr
+
+
+
+
 .endif
