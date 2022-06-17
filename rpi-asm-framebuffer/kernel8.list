@@ -17550,12 +17550,12 @@ Desensamblado de la sección .text:
    90f98:	d2801905 	mov	x5, #0xc8                  	// #200
    90f9c:	d2801546 	mov	x6, #0xaa                  	// #170
    90fa0:	97fffcef 	bl	9035c <pintar_i>
-   90fa4:	d2802581 	mov	x1, #0x12c                 	// #300
-   90fa8:	d2802582 	mov	x2, #0x12c                 	// #300
-   90fac:	d2802a83 	mov	x3, #0x154                 	// #340
-   90fb0:	d2802bc4 	mov	x4, #0x15e                 	// #350
-   90fb4:	d28028a5 	mov	x5, #0x145                 	// #325
-   90fb8:	d28030c6 	mov	x6, #0x186                 	// #390
+   90fa4:	d28017c1 	mov	x1, #0xbe                  	// #190
+   90fa8:	d2801402 	mov	x2, #0xa0                  	// #160
+   90fac:	d2801cc3 	mov	x3, #0xe6                  	// #230
+   90fb0:	d2801a44 	mov	x4, #0xd2                  	// #210
+   90fb4:	d2801ae5 	mov	x5, #0xd7                  	// #215
+   90fb8:	d2801f46 	mov	x6, #0xfa                  	// #250
    90fbc:	d28000a7 	mov	x7, #0x5                   	// #5
    90fc0:	97fffe52 	bl	90908 <pintar_lampara>
 
