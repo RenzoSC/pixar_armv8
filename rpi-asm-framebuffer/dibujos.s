@@ -576,25 +576,33 @@ conjunto_nubes:
 
 
 pintar_pxar:
-	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
+	sub sp, sp, #40 // Guardo el puntero de retorno en el stack
+    str x1, [sp,#32]
+	str x2, [sp,#24]
+	str x5, [sp,#16]
+	str x6, [sp,#8]
+	str lr, [sp,#0]
 	mov x5,90
-	mov x6,170
+	mov x6,190
 	bl pintar_p
 
 	mov x1, 290
-	mov x2, 170
+	mov x2, 190
 	bl pintar_x
 
 	mov x1, 400
-	mov x2, 170
+	mov x2, 190
 	bl pintar_a
 
 	mov x5, 510
-	mov x6, 170
+	mov x6, 190
 	bl pintar_r
-	ldur lr, [sp] // Recupero el puntero de retorno del stack
-    add sp, sp, #8 
+	ldr x1, [sp,#32]
+	ldr x2, [sp,#24]
+	ldr x5, [sp,#16]
+	ldr x6, [sp,#8]
+	ldr lr, [sp,#0]
+    add sp, sp, #40 
 	br lr
 
 /*------------------------------------------------------------------------------
@@ -604,9 +612,9 @@ funcion: dibuja el pasto
 pasto:  	
 
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    	stur lr, [sp]
+    stur lr, [sp]
     	
-    	mov x9, x2		//guardo en x9 la coordenada y
+    mov x9, x2		//guardo en x9 la coordenada y
     	
 	movz x10, 0x79, lsl 16
 	movk x10, 0xac5f, lsl 00
@@ -618,4 +626,205 @@ pasto:
     	add sp, sp, #8 
    	br lr
 
+ultra_animation:
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+	str lr,[sp,#16]
+	bl pintar_pxar
+	mov x5,200
+	mov x6,190
+	
+	mov x4, 70
+	str x4, [sp,#0]
+	str x6, [sp,#8]
+	bl pintar_i
+
+	mov x1, 190
+	mov x2, 96
+	mov x7, 5
+	bl pintar_lampara
+	
+	mov x22, x2
+	mov x29, 2	//para contar los saltos
+	
+saltoarriba:
+	ldr w10, fondoPixar
+	bl fondo
+
+	ldr x21, delay
+
+	bl pintar_pxar
+	mov x5,200
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+	bl pintar_i
+	
+	mov x1, 190
+	mov x7, 5
+	mov x2, x22
+	bl pintar_lampara
+	
+time:
+	subs x21, x21, 1
+        b.ne time
+        
+        sub x2, x22, 1
+        sub x22, x22, 1
+        cmp x2, 40
+        b.eq finalis
+        
+  	b saltoarriba
+
+finalis:
+	cbz x29, bajartodo
+
+bajar:	
+	ldr w10, fondoPixar
+	bl fondo
+
+	ldr x21, delay
+
+	bl pintar_pxar
+	mov x5,200
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+	bl pintar_i
+
+	mov x1, 190
+	mov x7, 5
+	mov x2, x22
+	bl pintar_lampara
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+time2:
+	subs x21, x21, 1
+        b.ne time2
+        
+        add x22, x22, 1
+		cmp x22, 96
+		b.lt seguir_sini
+		sub x4,x4,1
+		add x6,x6,1
+		str x4, [sp,#0]
+		str x6, [sp,#8]
+seguir_sini:        
+		cmp x2, 116
+        b.eq finalis2
+        
+  	b bajar
+
+finalis2:
+	
+volverinicio:
+
+	ldr w10, fondoPixar
+	bl fondo
+
+	ldr x21, delay
+
+	bl pintar_pxar
+	mov x5,200
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+	bl pintar_i
+
+	mov x1, 190
+	mov x7, 5
+	mov x2, x22
+	bl pintar_lampara
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+	
+time3:
+	subs x21, x21, 1
+        b.ne time3
+    
+        sub x22, x22, 1
+        cmp x2, 96
+		b.lt seguir_sini2
+		add x4,x4,1
+		sub x6,x6,1
+		str x4, [sp,#0]
+		str x6, [sp,#8]
+seguir_sini2:
+		cmp x2, 96
+        b.eq finalis3
+        
+  	b volverinicio
+
+finalis3:
+	
+	sub x29, x29, 1
+	cbnz x29, saltoarriba
+	
+	b saltoarriba
+	
+bajartodo:
+
+	ldr w10, fondoPixar
+	bl fondo
+
+	ldr x21, delay
+
+	bl pintar_pxar
+	mov x5,200
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+	bl pintar_i
+
+	mov x1, 190
+	mov x7, 5
+	mov x2, x22
+	bl pintar_lampara
+	ldr x4, [sp,#0]
+	ldr x6, [sp,#8]
+	
+time4:
+	subs x21, x21, 1
+        b.ne time4
+		add x22, x22, 1
+		cmp x22, 96
+        b.lt seguir_sini3
+		sub x4,x4,1
+		add x6,x6,1
+		str x4, [sp,#0]
+		str x6, [sp,#8]
+seguir_sini3:
+		cmp x2, 170
+        b.eq finalis4
+  	b bajartodo
+
+finalis4:
+	
+	
+	mov x7, 5
+	mov x22, 5
+	
+agrandarFoco:
+
+	ldr w10, fondoPixar
+	bl fondo
+
+	ldr x21, delay
+
+	bl pintar_pxar
+
+	mov x1, 190
+	mov x7, x22
+	mov x2, 169
+	bl pintar_lampara
+	
+time5:
+	subs x21, x21, 1
+        b.ne time5
+        
+        add x22, x22, 1
+        cmp x7, 18
+        b.eq finalis5
+        
+  	b agrandarFoco
+
+finalis5:
+	ldr lr,[sp,#16]
+	add sp, sp, #24 // Guardo el puntero de retorno en el stack
+	br lr
 .endif

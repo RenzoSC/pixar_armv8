@@ -307,7 +307,9 @@ funcion: pintar_linea
 				x4 (altura)
 				x10 (color)
 -------------------------------------------------------------------------------*/
-	sub sp, sp, #40 // Guardo el puntero de retorno en el stack
+	sub sp, sp, #56 // Guardo el puntero de retorno en el stack
+	str x5, [sp,#48]
+	str x6, [sp,#40]
 	str x4,[sp,#32]  // Store Register X5 in stack
 	str x5,[sp,#16]  // Store Register X5 in stack
     str x6,[sp,#8]  // Store Register X6 in stack
@@ -341,8 +343,11 @@ funcion: pintar_linea
 	mov x3,x8
 	mov x4,1
 	bl rectangulo
-	ldur lr, [sp,#0] // Recupero el puntero de retorno del stack
-    add sp, sp, #40
+	ldr lr, [sp,#0] // Recupero el puntero de retorno del stack
+	ldr x4,[sp,#32]
+	ldr x5, [sp,#48]
+	ldr x6, [sp,#40]
+    add sp, sp, #56
 	br lr
 
 pintar_x:
