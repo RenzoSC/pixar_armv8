@@ -11,8 +11,10 @@
 	delay: .dword 0xffffff
 
 //COLORES
+//general:
+negro: .word 0x0
 //fondo:
-fondoCelestePastel: .word 0x96ede8
+fondoCelestePastel: .word 0xabe1e1
 
 //globos:
 globoNaranja: .word 0xf97331
@@ -23,6 +25,9 @@ globoAzul: .word 0x3854ef
 globoAmarillo: .word 0xefd938
 reflejo: .word 0xe0edde
 
+//lampara:
+gris_lampara: .word 0xb8b8b8
+=======
 fondoComienzo: .word 0xeeffff
 restaComienzo: .word 0x020100
 
@@ -36,6 +41,5 @@ fondoAzulOscuro: .word 0x022255
 restaAzulOscuro: .word 0x000102
 
 fondoUltimo: .word 0x010100
-
 
 .endif

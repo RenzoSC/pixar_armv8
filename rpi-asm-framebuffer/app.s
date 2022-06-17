@@ -4,8 +4,7 @@
 main:
 	// X0 contiene la direccion base del framebuffer
  	mov x20, x0	// Save framebuffer base address to x20	
-	//---------------- CODE HERE ------------------------------------
-	
+	//---------------- CODE HERE ------------------------------------	
 	
 	//ANIMACION: valores inciales
 	//coordenada ´y´ de la nube
@@ -73,8 +72,6 @@ segg:   add x16, x29, 5
 continuacion:
 	mov x29, 0
 	b segg
-
-
 
 InfLoop: 
 	b InfLoop
