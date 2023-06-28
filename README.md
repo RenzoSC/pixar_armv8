@@ -31,6 +31,9 @@ En este caso, utilizaremos el Video Core (VC) de la Raspberry Pi 3 para manejar 
 
 Dentro de cada ejercicio se encuentra un readme con informacion para ejecutar el codigo y una descripcion del mimso
 
+## Notas
+En la carpeta ./ejemplos se encuentra una foto y un video de como sería la ejecucion del ejercicio 1 y 2 respectivamente
+
 ## Modalidad virtual de dictado de la materia
 
 Este proyecto se realiza en una modalidad virtual de dictado de la materia, por lo que la Raspberry Pi 3 se emula en lugar de utilizarse físicamente.
