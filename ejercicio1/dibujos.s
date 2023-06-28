@@ -536,6 +536,10 @@ nube:
  	todos los registros: x3 x10 x16
 ---------------------------------------------------------------------------------------------------*/
 conjunto_nubes:
+
+	mov x16, 20
+	mov x3, 80
+	
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
     	stur lr, [sp]
     	
@@ -574,7 +578,9 @@ conjunto_nubes:
     	add sp, sp, #8 
    	br lr
 
-
+/*---------------------------------------------------------------------------------------------------
+PINTAR PIXAR
+---------------------------------------------------------------------------------------------------*/
 pintar_pxar:
 	sub sp, sp, #40 // Guardo el puntero de retorno en el stack
     str x1, [sp,#32]
@@ -590,7 +596,7 @@ pintar_pxar:
 	mov x2, 190
 	bl pintar_x
 
-	mov x1, 400
+	mov x1, 425
 	mov x2, 190
 	bl pintar_a
 
@@ -611,42 +617,55 @@ funcion: dibuja el pasto
 -------------------------------------------------------------------------------*/  
 pasto:  	
 
+	mov x1, 0
+	mov x2, 460
+	
 	sub sp, sp, #8 // Guardo el puntero de retorno en el stack
-    stur lr, [sp]
+    	stur lr, [sp]
     	
-    mov x9, x2		//guardo en x9 la coordenada y
+    	mov x9, x2		//guardo en x9 la coordenada y
     	
-	movz x10, 0x79, lsl 16
-	movk x10, 0xac5f, lsl 00
+	movz x10, 0x67, lsl 16
+	movk x10, 0xb250, lsl 00
 	mov x3, 640
-	mov x4, 20
+	mov x4, 5
 	bl rectangulo
+	
+	movz x10, 0x54, lsl 16
+	movk x10, 0x412a, lsl 00
+	add x2, x9, 5
+	mov x3, 640
+	mov x4, 15
+	bl rectangulo
+
 
 	ldur lr, [sp] // Recupero el puntero de retorno del stack
     	add sp, sp, #8 
    	br lr
-
+   	
+/*------------------------------------------------------------------------------
+funcion: anima el PIXAR
+-------------------------------------------------------------------------------*/
 ultra_animation:
 	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
 	str lr,[sp,#16]
-	bl pintar_pxar
 	mov x5,200
 	mov x6,190
 	
 	mov x4, 70
 	str x4, [sp,#0]
 	str x6, [sp,#8]
-	bl pintar_i
 
 	mov x1, 190
 	mov x2, 96
 	mov x7, 5
-	bl pintar_lampara
 	
 	mov x22, x2
 	mov x29, 2	//para contar los saltos
 	
 saltoarriba:
+	bl direccion_secundaria
+	
 	ldr w10, fondoPixar
 	bl fondo
 
@@ -662,6 +681,8 @@ saltoarriba:
 	mov x7, 5
 	mov x2, x22
 	bl pintar_lampara
+	
+	bl actualizar_framebuffer
 	
 time:
 	subs x21, x21, 1
@@ -678,6 +699,7 @@ finalis:
 	cbz x29, bajartodo
 
 bajar:	
+	bl direccion_secundaria
 	ldr w10, fondoPixar
 	bl fondo
 
@@ -693,6 +715,7 @@ bajar:
 	mov x7, 5
 	mov x2, x22
 	bl pintar_lampara
+	bl actualizar_framebuffer
 	ldr x4, [sp,#0]
 	ldr x6, [sp,#8]
 time2:
@@ -715,7 +738,7 @@ seguir_sini:
 finalis2:
 	
 volverinicio:
-
+	bl direccion_secundaria
 	ldr w10, fondoPixar
 	bl fondo
 
@@ -731,8 +754,12 @@ volverinicio:
 	mov x7, 5
 	mov x2, x22
 	bl pintar_lampara
+	
+	bl actualizar_framebuffer
+	
 	ldr x4, [sp,#0]
 	ldr x6, [sp,#8]
+	
 	
 time3:
 	subs x21, x21, 1
@@ -760,6 +787,7 @@ finalis3:
 	
 bajartodo:
 
+	bl direccion_secundaria
 	ldr w10, fondoPixar
 	bl fondo
 
@@ -775,8 +803,12 @@ bajartodo:
 	mov x7, 5
 	mov x2, x22
 	bl pintar_lampara
+	
+	bl actualizar_framebuffer
+	
 	ldr x4, [sp,#0]
 	ldr x6, [sp,#8]
+	
 	
 time4:
 	subs x21, x21, 1
@@ -801,6 +833,7 @@ finalis4:
 	
 agrandarFoco:
 
+	bl direccion_secundaria
 	ldr w10, fondoPixar
 	bl fondo
 
@@ -812,6 +845,7 @@ agrandarFoco:
 	mov x7, x22
 	mov x2, 169
 	bl pintar_lampara
+	bl actualizar_framebuffer
 	
 time5:
 	subs x21, x21, 1
@@ -827,4 +861,128 @@ finalis5:
 	ldr lr,[sp,#16]
 	add sp, sp, #24 // Guardo el puntero de retorno en el stack
 	br lr
+	
+/*------------------------------------------------------------------------------
+funcion: telon rojo
+-------------------------------------------------------------------------------*/
+telon_negro:
+
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+	str lr,[sp,#16]
+	
+	mov x4, 1	
+	
+	
+telonNegro:
+	
+	//ldr w10, fondoPixar
+	//bl fondo
+	ldr w10, negro
+	mov x1, 0
+	mov x2, 0
+	mov x3, 640
+	bl rectangulo
+	mov x16, x4
+	bl circulo
+	mov x7, 20
+	bl circulo
+	
+	ldr x21, delay2
+	
+tiempotelon:
+	subs x21, x21, 1
+        b.ne tiempotelon
+        
+        add x4, x4, 1
+        cmp x4, 330
+        b.eq fin_telon
+        
+  	b telonNegro
+  	
+fin_telon:
+  	
+	ldr lr,[sp,#16]
+	add sp, sp, #24 // Guardo el puntero de retorno en el stack
+	br lr
+
+/*------------------------------------------------------------------------------
+funcion: animacion casa
+-------------------------------------------------------------------------------*/
+animacion_casa:
+
+	sub sp, sp, #24 // Guardo el puntero de retorno en el stack
+	str lr,[sp,#16]
+
+//ANIMACION: valores inciales
+	//coordenada ´y´ de la nube
+	mov x16, 0
+	mov x29, x16
+	//color incial del fondo
+	ldr w10, fondoComienzo
+	
+dibujar2: 
+	mov x2, 8		//reinicio el contador y lo guardo en memoria
+	mov x23, 100
+	stur x2, [x23, #20]
+
+dibujar:
+	ldr x21, delay3
+
+
+	//cambio la direccion para dibujar todo en el buffer secundario
+	bl direccion_secundaria
+
+	//dibujar: FONDO	(guardo en memoria el ultimo color del fondo que fue usado)
+	bl fondo
+	mov x22, 100
+	stur w10, [x22, #10]	
+
+	//dibujar: NUBES	(2 veces para que las nubes se regeneren infinitamente)
+	mov x3, 100
+	bl conjunto_nubes
+	mov x3, 100
+	sub x16, x29, 480
+	bl conjunto_nubes
+	
+	//dibujar: CASA y GLOBOS
+	bl casa
+	bl globos
+	
+
+	bl actualizar_framebuffer
+
+
+time_casa:
+	subs x21, x21, 1
+        b.ne time_casa
+        
+        cmp x29, 480
+        b.eq continuacion
+segg:   add x16, x29, 5
+        add x29, x29, 5
+       
+       mov x23, 100
+       ldur x2, [x23, #20]
+       sub x2, x2, 1
+       stur x2, [x23, #20]
+       
+       mov x22, 100
+       ldur x10, [x22, #10]
+        
+       cbnz x2, dibujar
+       
+        
+	//FONDO
+	bl actualizar_fondo
+	b dibujar2
+
+continuacion:
+	mov x29, 0
+	b segg
+
+
+	ldr lr,[sp,#16]
+	add sp, sp, #24 // Guardo el puntero de retorno en el stack
+	br lr
+
 .endif

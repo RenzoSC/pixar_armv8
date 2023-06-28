@@ -8,13 +8,16 @@
 
 
 .data
-	delay: .dword 0xffffff
+	delay: .dword 0x5fffff
+	delay2: .dword 0x3fffff
+	delay3: .dword 0xffffff
 
 //COLORES
 //general:
 negro: .word 0x0
 //fondo:
 fondoCelestePastel: .word 0xabe1e1
+fondoPixar: .word 0xbbdefe
 
 //globos:
 globoNaranja: .word 0xf97331
@@ -41,5 +44,4 @@ restaAzulOscuro: .word 0x000102
 
 fondoUltimo: .word 0x010100
 
-fondoPixar: .word 0xbbdefe
 .endif
